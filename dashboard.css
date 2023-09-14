@@ -1,0 +1,52 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+#nav {
+  display: flex;
+  gap: 25%;
+  background-color: aqua;
+  justify-content: center;
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
+#nav a {
+  text-decoration: none;
+  font-size: larger;
+}
+
+#div {
+  display: flex;
+  justify-content: center;
+  gap: 2%;
+  margin: 2%;
+}
+
+#dogs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2%;
+  justify-content: center;
+  text-align: center;
+}
+#dogs div {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+#dogs img {
+  width: 100%;
+}
+
+.delete {
+  background-color: red;
+  color: white;
+  margin: 2%;
+  padding: 1%;
+  border-radius: 5px;
+}
+.edit {
+  background-color: gray;
+  color: white;
+  margin: 2%;
+  padding: 1%;
+  border-radius: 5px;
+}

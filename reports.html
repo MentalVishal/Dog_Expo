@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="reports.css" />
+    <title>Reports Page</title>
+  </head>
+  <body>
+    <div id="nav">
+      <a href="dashboard.html">Dashboard Page</a>
+      <a href="reports.html">Reports Page</a>
+      <a href="login.html">Login Page</a>
+    </div>
+    <center><h1>Reports Page</h1></center>
+    <div id="div">
+      <table>
+        <thead>
+          <tr>
+            <th>Reports</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Total number of dogs attending.</td>
+            <td id="totalDogs"></td>
+          </tr>
+          <tr>
+            <td>Number of female dogs attending.</td>
+            <td id="femaleDogs"></td>
+          </tr>
+          <tr>
+            <td>Number of male dogs attending.</td>
+            <td id="maleDogs"></td>
+          </tr>
+          <tr>
+            <td>Average age group of dogs attending.</td>
+            <td id="averageDogs"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+  <script>
+    const token = localStorage.getItem("Token");
+    if (!token) {
+      window.location.href = "./login.html";
+    }
+    console.log(token);
+
+    const calculate = async () => {
+      const res = await fetch("https://dog-api-pmg1.onrender.com/dogs");
+      const data = await res.json();
+
+      const totalDogs = data.length;
+
+      const femaleDogs = data.filter((el) => el.gender == "Female").length;
+
+      const maleDogs = data.filter((el) => el.gender == "Male").length;
+
+      const total = data.reduce((acc, el) => acc + el.age, 0);
+      const average = total / totalDogs;
+
+      const tDogs = document.getElementById("totalDogs");
+      tDogs.innerText = totalDogs;
+
+      document.getElementById("femaleDogs").innerText = femaleDogs;
+
+      document.getElementById("maleDogs").innerText = maleDogs;
+
+      document.getElementById("averageDogs").innerText = average;
+    };
+    calculate();
+  </script>
+</html>

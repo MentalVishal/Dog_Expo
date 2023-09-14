@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="login.css" />
+    <title>Login Page</title>
+  </head>
+  <body>
+    <div id="nav">
+      <a href="dashboard.html">Dashboard Page</a>
+      <a href="reports.html">Reports Page</a>
+      <a href="login.html">Login Page</a>
+    </div>
+    <h1>Login Page</h1>
+    <form id="form">
+      <input type="email" placeholder="Email...." id="email" />
+
+      <input type="password" placeholder="Password...." id="password" />
+
+      <button type="submit">Login</button>
+    </form>
+  </body>
+  <script>
+    const loginForm = document.getElementById("form");
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const loginData = {
+        email,
+        password,
+      };
+
+      try {
+        const fetchData = await fetch("https://reqres.in/api/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginData),
+        });
+        if (fetchData.ok == true) {
+          const data = await fetchData.json();
+          const token = data.token;
+          console.log(token);
+          localStorage.setItem("Token", token);
+          window.location.href = "dashboard.html";
+        } else {
+          alert("Wrong Credentials...");
+          loginForm.reset();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  </script>
+</html>

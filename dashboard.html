@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="dashboard.css" />
+    <title>Dashboard Page</title>
+  </head>
+  <body>
+    <div id="nav">
+      <a href="dashboard.html">Dashboard Page</a>
+      <a href="reports.html">Reports Page</a>
+      <a href="login.html">Login Page</a>
+    </div>
+    <center><h1>Dashboard Page</h1></center>
+    <div id="div">
+      <label for="Gender Filter">Filter by Gender</label>
+      <select id="filter">
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+
+      <label for="Search by name">Search by name</label>
+      <input type="text" id="search" />
+
+      <label for="Sort by Age">Sort by Age</label>
+      <select id="sort">
+        <option value="">Select</option>
+        <option value="asce">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+    </div>
+    <div id="dogs">
+      <!-- Dogs Data -->
+    </div>
+  </body>
+  <script>
+    const token = localStorage.getItem("Token");
+    if (!token) {
+      window.location.href = "./login.html";
+    }
+    console.log(token);
+
+    const container = document.getElementById("dogs");
+    const displayData = async () => {
+      container.innerHTML = "";
+
+      const res = await fetch("https://dog-api-pmg1.onrender.com/dogs");
+      const data = await res.json();
+
+      const gender = document.getElementById("filter").value;
+      const fiterData = gender
+        ? data.filter((el) => el.gender === gender)
+        : data;
+
+      const search = document.getElementById("search").value.toLowerCase();
+      const searchData = search
+        ? fiterData.filter((el) => el.name.toLowerCase().includes(search))
+        : fiterData;
+
+      const sort = document.getElementById("sort").value;
+      if (sort == "asce") {
+        const sortData = searchData.sort((a, b) => a.age - b.age);
+      } else if (sort == "desc") {
+        const sortData = searchData.sort((a, b) => b.age - a.age);
+      }
+
+      searchData.forEach((element) => {
+        const div = document.createElement("div");
+
+        const img = document.createElement("img");
+        img.src =
+          "https://imgs.search.brave.com/BUKEBtxD7O_Ks4pKIqSR2HrgqT-dbklZV6SBAfL58_o/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTE4/NDY1NDg0OS9waG90/by9wdXBweS1ydW5u/aW5nLWF0LXRoZS1w/YXJrLmpwZz9zPTYx/Mng2MTImdz0wJms9/MjAmYz1XVnJKejVF/SFYxNTZmeFN3LWJ6/OXpZVHp4QjZYY2l4/LUFna1dDLXBORng4/PQ";
+        img.alt = "Dog Image";
+
+        const name = document.createElement("h1");
+        name.innerText = `Name : ${element.name}`;
+
+        const age = document.createElement("h2");
+        age.innerText = `Age : ${element.age}`;
+
+        const gender = document.createElement("h2");
+        gender.innerText = `Gender : ${element.gender}`;
+
+        const place = document.createElement("h2");
+        place.innerText = `Place : ${element.place}`;
+
+        const edit = document.createElement("button");
+        edit.innerText = "EDIT";
+        edit.className = "edit";
+
+        const del = document.createElement("button");
+        del.innerText = "DELETE";
+        del.className = "delete";
+
+        div.append(img, name, age, gender, place, edit, del);
+        container.append(div);
+
+        div.querySelector(".delete").addEventListener("click", async () => {
+          try {
+            await fetch(
+              `https://dog-api-pmg1.onrender.com/dogs/${element.id}`,
+              {
+                method: "DELETE",
+              }
+            );
+
+            displayData();
+          } catch (error) {
+            console.log(error);
+          }
+        });
+      });
+
+      console.log(searchData);
+    };
+
+    displayData();
+
+    document.getElementById("filter").addEventListener("change", displayData);
+
+    document.getElementById("search").addEventListener("input", displayData);
+
+    document.getElementById("sort").addEventListener("change", displayData);
+  </script>
+</html>
